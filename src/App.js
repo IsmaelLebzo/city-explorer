@@ -35,7 +35,7 @@ import axios from 'axios';
           <input type="submit" value='get city info' />
         </form>
 
-        {/* {this.state.showLocInfo && 
+        {this.state.showLocInfo && 
         <>
         <p>City Name: {this.state.searchQuery}</p>
         <p>Latitude: {this.state.locaResualt.lat}</p>
@@ -43,14 +43,14 @@ import axios from 'axios';
 
         <img src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&center=${this.state.locaResualt.lat},${this.state.locaResualt.lon}&zoom=12`} alt="city" />
         </>
-        } */}
-        <>
+        }
+        {/* <>
         <p>City Name: {this.state.searchQuery}</p>
         <p>Latitude: {this.state.locaResualt.lat}</p>
         <p>Longitude: {this.state.locaResualt.lon}</p>
 
         <img src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&center=${this.state.locaResualt.lat},${this.state.locaResualt.lon}&zoom=12`} alt="city" />
-        </>
+        </> */}
       </div>
     )
   }
