@@ -1,0 +1,21 @@
+* {
+  background-color: aqua;
+}
+h3 {
+  text-align: center;
+}
+Form {
+  font-size: 25px;
+  text-align: center;
+}
+img {
+  padding-left: 35%;
+}
+p {
+  padding-left: 2%;
+}
+
+#bot {
+  font-size: 30px;
+  text-align: center;
+}
