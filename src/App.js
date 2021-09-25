@@ -4,6 +4,8 @@ import './style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from 'react-bootstrap/Form';
 import Button from '@restart/ui/esm/Button';
+import Weather from './components/Weather.js';
+import Movie from './components/Movie.js';
 
 
  class App extends React.Component {
@@ -14,11 +16,18 @@ import Button from '@restart/ui/esm/Button';
       locaResualt: {},
       searchQuery: '',
       showLocInfo: false,
-      locations: []
+      locations: [],
+      WeatherResualt: [],
+      MovieResualt: [],
+      showWeatherInfo: false,
+      showMovieInfo: false,
+      showError: false
+
     }
   }
   getLocInfo = async (e) =>{
     e.preventDefault();
+    try{
     await this.setState({
       searchQuery: e.target.city.value
     })
@@ -27,16 +36,45 @@ import Button from '@restart/ui/esm/Button';
 
     let loctionResault = await axios.get(reqUrl);
 
-    let urlSite = `${process.env.REACT_APP_SERVER_LINK}/weather?searchQuery=${this.state.searchQuery}`
+    // let urlSite = `${process.env.REACT_APP_SERVER_LINK}/weather?searchQuery=${this.state.searchQuery}`
 
-    let resualtUrl = await axios.get(urlSite);
+    // let resualtUrl = await axios.get(urlSite);
 
     this.setState({
-      locations: resualtUrl.data,
+      // locations: resualtUrl.data,
       locaResualt: loctionResault.data[0],
       showLocInfo: true
     })
+    this.getWeatherFunction();
+    this.getMovieFunction();
   }
+  catch {
+  this.setState({
+    showError: true,
+    showLocInfo: false,
+    showWeatherInfo: false,
+    showMovieInfo: false
+  })
+}
+}
+
+getWeatherFunction = async(e) =>{
+  let reqWeatherUrl = `https://ismaelscity.herokuapp.com/getWeather?city=${this.state.searchQuery}`;
+  let WeatherRes = await axios.get(reqWeatherUrl);
+  this.setState({
+    WeatherResualt: WeatherRes.data,
+    showWeatherInfo: true
+  })
+}
+
+getMovieFun = async (event) => {
+  let reqMovieUrl = `http://ismaelscity.herokuapp.com/getMovie?city=${this.state.searchQuery}`;
+  let movieRes = await axios.get(reqMovieUrl);
+  this.setState({
+    MovieResualt: movieRes.data,
+    showMovieInfo: true
+  })
+}
   render() {
     return (
       <div>
@@ -60,7 +98,22 @@ import Button from '@restart/ui/esm/Button';
         <p>City Name: {this.state.searchQuery}</p>
         <p>Latitude: {this.state.locaResualt.lat}</p>
         <p>Longitude: {this.state.locaResualt.lon}</p>
-
+        {this.state.WeatherResualt.map(value =>{
+          return(
+            <Weather WeatherResualt={value}/>
+          )
+        })}
+        {this.state.MovieResualt.map(value => {
+          return(
+            <Movie MovieResualt={value} />
+          )
+        })}
+        {this.state.showError && 
+        <div>
+          <p>Error 404 Page Not Found</p>
+        </div>
+        }
+{/* 
         <img src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&center=${this.state.locaResualt.lat},${this.state.locaResualt.lon}&zoom=12`} alt="city" />
         <div id='bot'>
         <p>Date: {this.state.locations[0].date}</p>
@@ -69,7 +122,7 @@ import Button from '@restart/ui/esm/Button';
         <p>Description: {this.state.locations[1].description}</p>
         <p>Date: {this.state.locations[2].date}</p>
         <p>Description: {this.state.locations[2].description}</p>
-        </div>
+        </div> */}
         </>
         }
         {/* <>
