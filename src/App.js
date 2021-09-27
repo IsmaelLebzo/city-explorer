@@ -4,8 +4,10 @@ import './style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from 'react-bootstrap/Form';
 import Button from '@restart/ui/esm/Button';
-import Weather from './components/Weather.js';
-import Movie from './components/Movie.js';
+import Weather from './components/Weather';
+import Movie from './components/Movie';
+import Card from 'react-bootstrap/Card'
+
 
 
  class App extends React.Component {
@@ -13,128 +15,77 @@ import Movie from './components/Movie.js';
   constructor(props){
     super(props);
     this.state = {
-      locaResualt: {},
+      locationResult: {},
       searchQuery: '',
       showLocInfo: false,
-      locations: [],
-      WeatherResualt: [],
-      MovieResualt: [],
-      showWeatherInfo: false,
-      showMovieInfo: false,
-      showError: false
-
-    }
+      WeatherResult: [],
+      MovieResualt: []
+    };
   }
   getLocInfo = async (e) =>{
     e.preventDefault();
-    try{
+    
     await this.setState({
-      searchQuery: e.target.city.value
-    })
+      searchQuery: e.target.city.value,
+    });
 
     let reqUrl = `https://eu1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&q=${this.state.searchQuery}&format=json`
 
-    let loctionResault = await axios.get(reqUrl);
+    let locResult = await axios.get(reqUrl);
+    console.log(reqUrl);
+    let weatherUrl = `${process.env.REACT_APP_SERVER_LINK}/getWeather?city=${this.state.searchQuery}`;
+    
+    let weatherResult = await axios.get(weatherUrl);
+    console.log(weatherUrl);
 
-    // let urlSite = `${process.env.REACT_APP_SERVER_LINK}/weather?searchQuery=${this.state.searchQuery}`
+    let movieUrl = `${process.env.REACT_APP_SERVER_LINK}/getMovie?city=${this.state.searchQuery}`;
 
-    // let resualtUrl = await axios.get(urlSite);
-
+    let movieResult = await axios.get(movieUrl);
+    console.log(movieUrl);
+    
     this.setState({
-      // locations: resualtUrl.data,
-      locaResualt: loctionResault.data[0],
+      locationResult: locResult.data[0],
+      WeatherResult: weatherResult.data,
+      MovieResualt: movieResult.data,
       showLocInfo: true
     })
-    this.getWeatherFunction();
-    this.getMovieFunction();
-  }
-  catch {
-  this.setState({
-    showError: true,
-    showLocInfo: false,
-    showWeatherInfo: false,
-    showMovieInfo: false
-  })
-}
-}
+    console.log(this.state.WeatherResult);
+  };
 
-getWeatherFunction = async(e) =>{
-  let reqWeatherUrl = `https://ismaelscity.herokuapp.com/getWeather?city=${this.state.searchQuery}`;
-  let WeatherRes = await axios.get(reqWeatherUrl);
-  this.setState({
-    WeatherResualt: WeatherRes.data,
-    showWeatherInfo: true
-  })
-}
-
-getMovieFun = async (event) => {
-  let reqMovieUrl = `http://ismaelscity.herokuapp.com/getMovie?city=${this.state.searchQuery}`;
-  let movieRes = await axios.get(reqMovieUrl);
-  this.setState({
-    MovieResualt: movieRes.data,
-    showMovieInfo: true
-  })
-}
   render() {
     return (
       <div>
         <h3>City Explore app</h3>
-        {/* <form >
-          <input type="text" name='city'/>
-          <input type="submit" value='get city info' />
-        </form> */}
         <Form onSubmit={this.getLocInfo}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>City Name</Form.Label>
         <Form.Control id='lol' type="text" name='city' placeholder="Enter City" />
         </Form.Group>
         <Button variant="primary" type="submit" value='get city info'>
-        Submit
+        Explore!
         </Button>
         </Form>
         {this.state.showLocInfo && 
-        <>
-        
-        <p>City Name: {this.state.searchQuery}</p>
-        <p>Latitude: {this.state.locaResualt.lat}</p>
-        <p>Longitude: {this.state.locaResualt.lon}</p>
-        {this.state.WeatherResualt.map(value =>{
-          return(
-            <Weather WeatherResualt={value}/>
-          )
-        })}
-        {this.state.MovieResualt.map(value => {
-          return(
-            <Movie MovieResualt={value} />
-          )
-        })}
-        {this.state.showError && 
-        <div>
-          <p>Error 404 Page Not Found</p>
-        </div>
-        }
-{/* 
-        <img src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&center=${this.state.locaResualt.lat},${this.state.locaResualt.lon}&zoom=12`} alt="city" />
-        <div id='bot'>
-        <p>Date: {this.state.locations[0].date}</p>
-        <p>Description: {this.state.locations[0].description}</p>
-        <p>Date: {this.state.locations[1].date}</p>
-        <p>Description: {this.state.locations[1].description}</p>
-        <p>Date: {this.state.locations[2].date}</p>
-        <p>Description: {this.state.locations[2].description}</p>
-        </div> */}
-        </>
-        }
-        {/* <>
-        <p>City Name: {this.state.searchQuery}</p>
-        <p>Latitude: {this.state.locaResualt.lat}</p>
-        <p>Longitude: {this.state.locaResualt.lon}</p>
+         <>
+         <Card style={{ width: '30rem' }}>
+           <Card.Img variant="top" src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&center=${this.state.locationResult.lat},${this.state.locationResult.lon}&zoom=10`} alt="city" style={{ width: '100%' }} />
+           <Card.Body>
+             <Card.Title>City info 🗺️</Card.Title>
+             <Card.Text>
+               <p>City name: {this.state.searchQuery}</p>
+               <p>Latitude: {this.state.locationResult.lat}</p>
+               <p>Longitude: {this.state.locationResult.lon} </p>
+               <hr />
+               <Weather WeatherResult = {this.state.WeatherResult} />
+               <hr />
+               <Movie MovieResualt={this.state.MovieResualt}/>
+             </Card.Text>
+           </Card.Body>
+         </Card>
+       </>
+    }</div>
+    );
+  };
 
-        <img src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&center=${this.state.locaResualt.lat},${this.state.locaResualt.lon}&zoom=12`} alt="city" />
-        </> */}
-      </div>
-    )
-  }
-}
-
-export default App
+ };
+export default App;
