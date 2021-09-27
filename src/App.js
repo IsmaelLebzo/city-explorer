@@ -4,9 +4,9 @@ import './style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from 'react-bootstrap/Form';
 import Button from '@restart/ui/esm/Button';
+import Card from 'react-bootstrap/Card';
 import Weather from './components/Weather';
-import Movie from './components/Movie';
-import Card from 'react-bootstrap/Card'
+import Movie from './components/Movie'
 
 
 
@@ -22,7 +22,7 @@ import Card from 'react-bootstrap/Card'
       MovieResualt: []
     };
   }
-  getLocInfo = async (e) =>{
+  getLocFun = async (e) =>{
     e.preventDefault();
     
     await this.setState({
@@ -56,16 +56,16 @@ import Card from 'react-bootstrap/Card'
     return (
       <div>
         <h3>City Explore app</h3>
-        <Form onSubmit={this.getLocInfo}>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form onSubmit={this.getLocFun}>
+        <Form.Group className="mb-3" controlId="Search Location">
         <Form.Label>City Name</Form.Label>
-        <Form.Control id='lol' type="text" name='city' placeholder="Enter City" />
+        <Form.Control type="text" name='city' placeholder="Enter City" />
         </Form.Group>
-        <Button variant="primary" type="submit" value='get city info'>
+        <Button variant="primary" type="submit">
         Explore!
         </Button>
         </Form>
-        {this.state.showLocInfo && 
+        {this.state.showLocInfo && (
          <>
          <Card style={{ width: '30rem' }}>
            <Card.Img variant="top" src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&center=${this.state.locationResult.lat},${this.state.locationResult.lon}&zoom=10`} alt="city" style={{ width: '100%' }} />
@@ -83,7 +83,7 @@ import Card from 'react-bootstrap/Card'
            </Card.Body>
          </Card>
        </>
-    }</div>
+        )}</div>
     );
   };
 
