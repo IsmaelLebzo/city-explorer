@@ -19,7 +19,7 @@ import Movie from './components/Movie'
       searchQuery: '',
       showLocInfo: false,
       WeatherResult: [],
-      MovieResualt: []
+      MovieResult: []
     };
   }
   getLocFun = async (e) =>{
@@ -30,23 +30,19 @@ import Movie from './components/Movie'
     });
 
     let reqUrl = `https://eu1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&q=${this.state.searchQuery}&format=json`
-
     let locResult = await axios.get(reqUrl);
     console.log(reqUrl);
     let weatherUrl = `${process.env.REACT_APP_SERVER_LINK}/getWeather?city=${this.state.searchQuery}`;
-    
     let weatherResult = await axios.get(weatherUrl);
     console.log(weatherUrl);
-
     let movieUrl = `${process.env.REACT_APP_SERVER_LINK}/getMovie?city=${this.state.searchQuery}`;
-
     let movieResult = await axios.get(movieUrl);
     console.log(movieUrl);
     
     this.setState({
-      locationResult: locResult.data[0],
-      WeatherResult: weatherResult.data,
-      MovieResualt: movieResult.data,
+      locationResult: locResult.data[0].data,
+      WeatherResult: weatherResult.data.data,
+      MovieResult: movieResult.data.data,
       showLocInfo: true
     })
     console.log(this.state.WeatherResult);
@@ -65,10 +61,10 @@ import Movie from './components/Movie'
         Explore!
         </Button>
         </Form>
-        {this.state.showLocInfo && (
+        {this.state.showLocInfo && 
          <>
          <Card style={{ width: '30rem' }}>
-           <Card.Img variant="top" src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&center=${this.state.locationResult.lat},${this.state.locationResult.lon}&zoom=10`} alt="city" style={{ width: '100%' }} />
+           {/* <Card.Img variant="top" src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&center=${this.state.locationResult.lat},${this.state.locationResult.lon}&zoom=10`} alt="city"/> */}
            <Card.Body>
              <Card.Title>City info 🗺️</Card.Title>
              <Card.Text>
@@ -78,12 +74,12 @@ import Movie from './components/Movie'
                <hr />
                <Weather WeatherResult = {this.state.WeatherResult} />
                <hr />
-               <Movie MovieResualt={this.state.MovieResualt}/>
+               <Movie MovieResult={this.state.MovieResult}/>
              </Card.Text>
            </Card.Body>
          </Card>
        </>
-        )}</div>
+        }</div>
     );
   };
 
