@@ -37,18 +37,20 @@ import Movie from './components/Movie'
     console.log(weatherUrl);
     let movieUrl = `${process.env.REACT_APP_SERVER_LINK}/getMovie?city=${this.state.searchQuery}`;
     let movieResult = await axios.get(movieUrl);
-    console.log(movieUrl);
-    
+    // console.log(movieUrl);
+    // console.log(locResult.data[0]);
+    console.log(movieResult.data);
     this.setState({
-      locationResult: locResult.data[0].data,
-      WeatherResult: weatherResult.data.data,
-      MovieResult: movieResult.data.data,
+      locationResult: locResult.data[0],
+      WeatherResult: weatherResult.data.weatherData,
+      MovieResult: movieResult.data,
       showLocInfo: true
     })
     console.log(this.state.WeatherResult);
   };
 
   render() {
+    
     return (
       <div>
         <h3>City Explore app</h3>
@@ -74,7 +76,12 @@ import Movie from './components/Movie'
                <hr />
                <Weather WeatherResult = {this.state.WeatherResult} />
                <hr />
-               <Movie MovieResult={this.state.MovieResult}/>
+               {this.state.MovieResult.map(movie => 
+                {
+                  return (
+                    <Movie MovieResult={movie}/>
+                  )
+                })}
              </Card.Text>
            </Card.Body>
          </Card>
