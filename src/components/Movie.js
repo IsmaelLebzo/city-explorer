@@ -17,7 +17,7 @@ class Movie extends Component {
                             <p>Total Votes: {this.props.MovieResult.vote_count}</p>
                             <img src={this.props.MovieResult.poster_path} alt={this.props.alt}  style={{ width: '100%' }}/>
                             <p>Popularity: {this.props.MovieResult.popularity}</p>
-                            <p>Released On: {this.props.MovieResult.released_on}</p>
+                            <p>Released On: {this.props.MovieResult.release_date}</p>
                         </Card.Text>
                     </Card.Body>
                 </Card>
