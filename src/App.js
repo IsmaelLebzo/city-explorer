@@ -66,7 +66,7 @@ import Movie from './components/Movie'
         {this.state.showLocInfo && 
          <>
          <Card style={{ width: '30rem' }}>
-           {/* <Card.Img variant="top" src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&center=${this.state.locationResult.lat},${this.state.locationResult.lon}&zoom=10`} alt="city"/> */}
+           <Card.Img variant="top" src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&center=${this.state.locationResult.lat},${this.state.locationResult.lon}&zoom=10`} alt="city"/>
            <Card.Body>
              <Card.Title>City info 🗺️</Card.Title>
              <Card.Text>
